@@ -1,0 +1,151 @@
+{
+  "id": "kotlin",
+  "name": "%plugin.name%",
+  "version": "0.1.0",
+  "vendor": "Lemon Paperplane",
+  "description": "%plugin.description%",
+  "icon": "icons/kotlin.svg",
+  "category": "language",
+  "engines": {
+    "paperplane": ">=0.1.0 <0.2.0"
+  },
+  "protocol": 1,
+  "executable": "bin/paperplane-plugin-kotlin",
+  "dependencies": [
+    {
+      "id": "java"
+    },
+    {
+      "id": "gradle",
+      "optional": true
+    },
+    {
+      "id": "maven",
+      "optional": true
+    }
+  ],
+  "activation": {
+    "facets": [
+      "gradle",
+      "maven"
+    ]
+  },
+  "contributes": {
+    "languages": [
+      {"id": "kotlin", "name": "Kotlin", "extensions": [".kt", ".kts"], "module": "editor/lang-kotlin.js", "lineComment": "//", "blockComment": ["/*", "*/"]}
+    ],
+    "facets": [
+      {
+        "id": "kotlin",
+        "name": "Kotlin",
+        "icon": "icons/kotlin.svg",
+        "category": "language",
+        "priority": 60
+      }
+    ],
+    "runConfigurationTypes": [
+      {
+        "id": "kotlin-application",
+        "name": "%runType.application%",
+        "icon": "icons/kotlin.svg",
+        "facets": [
+          "kotlin"
+        ],
+        "options": [
+          {
+            "key": "mainClass",
+            "title": "%opt.mainClass%",
+            "type": "string",
+            "required": true,
+            "placeholder": "com.example.MainKt",
+            "info": "%opt.mainClass.info%"
+          },
+          {
+            "key": "module",
+            "title": "%opt.module%",
+            "type": "select",
+            "optionsFrom": "jvm.modules"
+          },
+          {
+            "key": "vmOptions",
+            "title": "%opt.vmOptions%",
+            "type": "string"
+          },
+          {
+            "key": "programArgs",
+            "title": "%opt.programArgs%",
+            "type": "string"
+          },
+          {
+            "key": "workingDir",
+            "title": "%opt.workingDir%",
+            "type": "path",
+            "advanced": true,
+            "info": "%opt.workingDir.info%"
+          }
+        ]
+      }
+    ],
+    "ideRunConfigTypes": [
+      "JetRunConfigurationType"
+    ],
+    "diagnostics": [
+      {
+        "id": "kotlin.inconsistent-jvm-target",
+        "hint": "Inconsistent JVM-target compatibility",
+        "pattern": "Inconsistent JVM-target compatibility detected for tasks 'compileJava' \\((\\d+)\\) and 'compileKotlin' \\((\\d+)\\)",
+        "severity": "error",
+        "title": "%diag.jvmTarget.title%",
+        "message": "%diag.jvmTarget.message%",
+        "fixes": [
+          {
+            "id": "useJdk",
+            "title": "%fix.useJdkTarget%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "jdk",
+              "constraint": "{1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "kotlin.unknown-jvm-target",
+        "hint": "Unknown Kotlin JVM target",
+        "pattern": "Unknown Kotlin JVM target: (\\d+)",
+        "severity": "error",
+        "title": "%diag.unknownTarget.title%",
+        "message": "%diag.unknownTarget.message%",
+        "fixes": [
+          {
+            "id": "useJdk",
+            "title": "%fix.useOlderJdk%",
+            "kind": "setToolchain",
+            "params": {
+              "kind": "jdk",
+              "constraint": "<{1}"
+            },
+            "recommended": true
+          }
+        ]
+      },
+      {
+        "id": "kotlin.incompatible-metadata",
+        "hint": "incompatible version of Kotlin",
+        "pattern": "was compiled with an incompatible version of Kotlin\\. The binary version of its metadata is ([\\d.]+), expected version is ([\\d.]+)",
+        "severity": "error",
+        "title": "%diag.metadata.title%",
+        "message": "%diag.metadata.message%"
+      },
+      {
+        "id": "kotlin.daemon-oom",
+        "hint": "Kotlin daemon",
+        "pattern": "Kotlin daemon.*(?:OutOfMemoryError|Java heap space)|Could not connect to Kotlin compile daemon",
+        "severity": "warning",
+        "title": "%diag.daemon.title%",
+        "message": "%diag.daemon.message%"
+      }
+    ]
+  }
+}
